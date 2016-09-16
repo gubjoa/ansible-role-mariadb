@@ -1,2 +1,40 @@
 ---
 # tasks file for mariadb
+#
+# sudo apt-get update
+# sudo apt-get install software-properties-common
+# sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+# sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://ftp.ddg.lth.se/mariadb/repo/10.1/ubuntu xenial main'
+#
+# sudo apt update
+# sudo apt install mariadb-server
+#
+
+- name: install mariadb prerequisites
+  apt: pkg=software-properties-common update_cache=yes
+
+- name: import apt-keys for mariadb
+  apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=0xF1656F24C74CD1D8 validate_certs=yes
+
+- name: add apt-repository for mariadb
+# 'deb [arch=amd64,i386,ppc64el] http://ftp.ddg.lth.se/mariadb/repo/10.1/ubuntu xenial main'
+  apt_repository: repo='deb [arch=amd64,i386,ppc64el] http://ftp.ddg.lth.se/mariadb/repo/10.1/ubuntu xenial main'
+
+- name: install mariadb
+  apt: pkg=mariadb-server update_cache=yes
+
+  # process template my.cnf.j2 and place result into /etc/myql/my.cnf
+  # process template conf.d/mariadb.j2 and place result into /etc/myql/conf.d/mariadb.cnf
+#- name: basic database configuration
+#  template: src={{ item }} dest=/etc/mysql/my.cnf mode=0644
+#  with_items:
+#  - templates/my.cnf.j2
+#  - templates/conf.d/mariadb.cnf.j2
+#
+
+- name: basic database configuration
+  template: src={{ item.src }} dest={{ item.dest }} mode=0644
+  with_items:
+    - { src: 'templates/my.cnf.j2', dest: '/etc/mysql/my.cnf' }
+    - { src: 'templates/conf.d/mariadb.cnf.j2', dest: '/etc/mysql/conf.d/mariadb.cnf' }
+  notify: restart mariadb

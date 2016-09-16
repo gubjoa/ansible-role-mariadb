@@ -1,2 +1,7 @@
 ---
 # defaults file for mariadb
+
+# Default locale settings for databases in conf.d/mariadb.cnf
+mariadb_default_character_set: utf8
+mariadb_character_set_server: utf8
+mariadb_collation_server: utf8_general_ci
