@@ -1,38 +1,56 @@
-Role Name
-=========
+# mariadb
 
-A brief description of the role goes here.
+This Ansible Role is meant to install mariadb and put basic configuration in
+place. It is only meant to be used at an Ubuntu 16-04 box. Also, extra configuration and databases should be put in separately.
 
-Requirements
-------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## Requirements
 
-Role Variables
---------------
+None
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Role Variables
+
+### Character Set and Collation
+
+Three variables are used for __character set__ and __collation__. Those set with these variables will provide with the default values used by mariadb when it is starting up. You may create databases with other values if You like, but the values You set for these would be the defaults.
+
+- __mariadb_default_character_set__ sets the default character set for the client
+- __mariadb_character_set_server__ sets the default character set for the server
+- __mariadb_collation_server__ sets the default collation at the server
+
+If You need more knowledge about character sets and collation in mariadb, I recommend You check out the following resources at the mariadb site:
+
+- [Character Set and Collation Overview](https://mariadb.com/kb/en/mariadb/character-set-and-collation-overview/
+)
+- [Supported Character Sets and Collations](https://mariadb.com/kb/en/mariadb/supported-character-sets-and-collations/)
+- [Collation](https://mariadb.com/kb/en/sql-99/22-sql-collations-collation/)
+
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+The easiest way to tweak the variables is to copy and paste the ones You would
+like to change from the __defaults/main.yml__ file. Put them in a __config.yml__
+file and use it from within Your playbook.
 
-    - hosts: servers
+    ---
+    - hosts: your-host
+      become: True
+
+      vars_files:
+        - config.yml
+
       roles:
-         - { role: username.rolename, x: 42 }
+        - gubjoa.mariadb
+
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+GPLv2
